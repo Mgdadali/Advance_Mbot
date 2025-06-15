@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 # إعداد Google Sheet
 SHEET_ID = '10-gDKaxRQfJqkIoiF3BYQ0YiNXzG7Ml9Pm5r9X9xfCM'
-SHEET_RANGE = 'Sheet1'
+SHEET_RANGE = 'الورقة1'
 SERVICE_ACCOUNT_FILE = '249group.json'
 
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -45,8 +45,8 @@ def save_client(phone, message):
     return assigned_to
 
 # إعدادات Ultramsg
-ULTRAMSG_INSTANCE_ID = 'instance124587'
-ULTRAMSG_TOKEN = '3n101lgbdj95vn7y8ggg'
+ULTRAMSG_INSTANCE_ID = 'instance124923'
+ULTRAMSG_TOKEN = 'cy1phhf1mrsg8eia'
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
