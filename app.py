@@ -1,24 +1,23 @@
-from flask import Flask, request
 import os
 import json
+from flask import Flask, request
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
 
 app = Flask(__name__)
 
-# إعداد Google Sheet
 SHEET_ID = '10-gDKaxRQfJqkIoiF3BYQ0YiNXzG7Ml9Pm5r9X9xfCM'
-SERVICE_ACCOUNT_FILE = 'refined-lotus-389521-b4d8a307552e.json'
 
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
-credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=scopes)
+
+json_creds = os.getenv('GOOGLE_CREDENTIALS')
+info = json.loads(json_creds)
+credentials = Credentials.from_service_account_info(info, scopes=scopes)
 client = gspread.authorize(credentials)
 
-# اسم الورقة بعد التعديل
-sheet = client.open_by_key(SHEET_ID).worksheet("sheet")
+sheet = client.open_by_key(SHEET_ID).worksheet("sheet")  # تأكد الاسم هنا
 
-# قائمة الموظفين (أرقام الواتساب)
 EMPLOYEES = [
     "201029664170", "201029773000", "201029772000",
     "201055855040", "201029455000", "201027480870", "201055855030"
@@ -46,8 +45,6 @@ def save_client(phone, message):
 @app.route('/webhook', methods=['POST'])
 def webhook():
     data = request.json
-    print("Received Data:", data)
-
     if not data or 'data' not in data:
         return "Invalid Data", 400
 
