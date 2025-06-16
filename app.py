@@ -7,6 +7,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
+# إعداد Google Sheet
 SHEET_ID = '10-gDKaxRQfJqkIoiF3BYQ0YiNXzG7Ml9Pm5r9X9xfCM'
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 
@@ -19,10 +20,15 @@ info = json.loads(json_creds)
 credentials = Credentials.from_service_account_info(info, scopes=scopes)
 client = gspread.authorize(credentials)
 
-# فتح Google Sheet وورقة العمل
-sheet = client.open_by_key(SHEET_ID).worksheet("sheet")  # عدّل اسم الورقة هنا لو مختلف
+# فتح Google Sheet واختبار الوصول
+try:
+    sheet = client.open_by_key(SHEET_ID).worksheet("sheet")  # تأكد من اسم الورقة
+    print("✅ Sheet opened successfully:", sheet.title)
+except Exception as e:
+    print("❌ Failed to open sheet:", str(e))
+    raise e  # حتى تتوقف الخدمة لو في مشكلة حقيقية
 
-# أرقام الموظفين
+# قائمة الموظفين
 EMPLOYEES = [
     "201029664170", "201029773000", "201029772000",
     "201055855040", "201029455000", "201027480870", "201055855030"
