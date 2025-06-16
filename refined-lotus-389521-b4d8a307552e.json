@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "refined-lotus-389521",
+  "private_key_id": "b4d8a307552ee9dac086337d89a9473105d888f0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDy7YwWwn5X7eD7\nAOrEdzChSga4p/xoKHQLO0+nX1/gFIdFt3PQ3h4YKC/TnM0q0UA1k5bXuNw4Sb7q\n0mt5Q+UlKUSnzScLf4Qg98rZodgp592sz8jMeDTZO5Q21yFpJ6/iBhQwBMVzhtRB\nQDyEwOjuYZrkJP7OCUtJSV4IwbQJ8kvNx1IL9LAd0xAeDeBOL18evBVjfCnn/EZE\n4H0jixiaXksKukVjRHff2hfr7+EQxujmDf+/82Fj1EeuZ7AM17Wc5dage94FypXr\nTQdd4eE90erJ+c5fExwrNU6ssxs/MIrKTv1T7A5DcGp64lI5w1HvJX8cbBeyqB8S\neZOkosz5AgMBAAECggEAAV1w11Ll81gIlth5OTvjN9DK62A0RKCPkF2Xs7zPNNrg\nrLVcbvzEhgW5yRJdO8ObvQFUjGdDQ4S0kCy5AmAtijEqa9f1A3VGuImz59enN4sQ\nPY+YVP/K6jqRuWIpk6XvsNEwbVmlg2HrUOeLv4I2/NnrDSOhE+bM9780ClAOUyz4\nzvUhO9HX4WHYEw56IZduyZ73labk1AGOxl0sIcoI+lDjf8NkDxoIWNcJXmMbWEHN\nZaxnFSt/v+WZXuu1KOsnoBddxBJYBRDbrpOP/5xCrCreDumovrEH2FMO9EuiOCMa\n+jrO1NfzYpoRjmh+SsNNy3qdRm3nu5AObI+8kMBgoQKBgQD+v5TJ9gKhYfCcgRUf\n/Uw2e8tDRVY5Cd7OMASV7ro63TSyiD9P/++dHavhu5g/XAtJl8QVSIATfkw90QXk\nl0kXbpQiPnCxRZoPIEl7o3o3tPQV6zlT14q/B5xe6UI/+42QSX7ZhDoi81bDQzqd\neHgdMHe9vu9Q1BdE5gZ0PvlT6QKBgQD0HxkyyZiWfB6dZKBVNeeWcAP4GJoMvpBT\ndxb/Cv0sDNp5S3a8vGyzOMoibeH8LIyXJ39wwnkYcKws9SMsLN2qAHFvQXe7rEm6\ndKRBDMcNhFHxhnyWybsWKFtkp78N0vcwfodzelbdi+r3WmEuD0LS4BxJPhQ2pFFA\noXnP+ypWkQKBgQC5g+7ovJzhxZ8heedWanHL4478qEvIMeXtpY5RWY6JO3oa4Zmp\nuqpWcrsvIhwXWAJoT3tePHP4virrgYKXG40A4WhDH9GVZyhwB4U74qsoUkDGjYws\nAHVr9DDt9VRnn9tRzhPwd5iWxzrR6+2Nq6NdLmSk65z/8dQYOqNMmGedsQKBgQCd\nVJGL3ssdaR7d9yUx5Yy8srKMKWbXAdXIRP8oHe/ufNYsyArdNl6j3ty+9axoNlnh\nbM5AYMVkj/EXBGHHrZ6qWqDAwCOnazEVHulhFxgOSRH6o98V2ytc62ODamzCPw2a\nTmGDdfwXyn4DLldlNOavO0pflce3M40+JxN3i/rMUQKBgQDrJYS7KswkOVu1aORH\npnDTCgvvqZgco/uDKKolS3gO4OIeNqJ+dz/YqvJ3wTVaGS8h6nWkLIL+dbUZltOE\n0Nqz87l3dQHEJ6oKEkJ8kncyklk5SKJGF6tfu6pfFwPm40sizHeHCp/5vtxRe0cp\nTOCfGs9V4GyzJQfOVz8+CryP/w==\n-----END PRIVATE KEY-----\n",
+  "client_email": "id-49bot-customer-assignment@refined-lotus-389521.iam.gserviceaccount.com",
+  "client_id": "102154008200758205201",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/id-49bot-customer-assignment%40refined-lotus-389521.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
