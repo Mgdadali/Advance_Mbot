@@ -55,24 +55,38 @@ def save_client(phone, message):
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    data = request.json
-    if not data or 'data' not in data:
-        return "Invalid Data", 400
+    try:
+        data = request.get_json(force=True)
+        print("📥 Incoming request:", json.dumps(data, indent=2))
 
-    message = data['data']
-    sender = message.get('from')
-    msg_body = message.get('body', '')
-    is_group = '@g.us' in sender
-    from_me = message.get('fromMe', False)
+        if not data or 'data' not in data:
+            print("❌ Missing 'data' field in JSON.")
+            return "Invalid Data", 400
 
-    if is_group or from_me:
-        return "Ignored", 200
+        message = data['data']
+        print("📦 Message:", message)
 
-    if is_existing_client(sender):
-        return "Already assigned", 200
+        sender = message.get('from')
+        msg_body = message.get('body', '')
+        is_group = '@g.us' in sender if sender else False
+        from_me = message.get('fromMe', False)
 
-    save_client(sender, msg_body)
-    return "Logged", 200
+        print(f"📞 Sender: {sender}, Body: {msg_body}, Group: {is_group}, FromMe: {from_me}")
+
+        if is_group or from_me:
+            return "Ignored", 200
+
+        if is_existing_client(sender):
+            print("🔁 Already assigned")
+            return "Already assigned", 200
+
+        assigned_to = save_client(sender, msg_body)
+        print(f"✅ Assigned to: {assigned_to}")
+        return "Logged", 200
+
+    except Exception as e:
+        print("💥 Error:", str(e))
+        return "Error", 500
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
