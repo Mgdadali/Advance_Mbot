@@ -14,7 +14,7 @@ SERVICE_ACCOUNT_FILE = 'refined-lotus-389521-b4d8a307552e.json'
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=scopes)
 client = gspread.authorize(credentials)
-sheet = client.open_by_key(SHEET_ID).worksheet("الورقة1")
+sheet = client.open_by_key(SHEET_ID).worksheet("الورقة 1")
 
 # قائمة الموظفين (أرقام الواتساب)
 EMPLOYEES = [
