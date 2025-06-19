@@ -1,12 +1,12 @@
 import os
-import json 
+import json
 from flask import Flask, request
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
 import requests
 
-app = Flask(__name__)  # ❗️كان في خطأ هنا: name بدل __name__
+app = Flask(__name__)
 
 # إعداد Google Sheet
 SHEET_ID = '10-gDKaxRQfJqkIoiF3BYQ0YiNXzG7Ml9Pm5r9X9xfCM'
@@ -14,7 +14,7 @@ scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 
 # تحميل بيانات اعتماد Google من متغير البيئة
 json_creds = os.getenv('GOOGLE_CREDENTIALS')
-print("✅ Length of GOOGLE_CREDENTIALS:", len(json_creds) if json_creds else "❌ Not Found")
+print("✅ تم العثور على GOOGLE_CREDENTIALS بطول:", len(json_creds) if json_creds else "❌ لم يتم العثور على GOOGLE_CREDENTIALS")
 
 # تحويل النص إلى dict
 info = json.loads(json_creds)
@@ -24,9 +24,9 @@ client = gspread.authorize(credentials)
 # فتح Google Sheet واختبار الوصول
 try:
     sheet = client.open_by_key(SHEET_ID).worksheet("sheet")
-    print("✅ Sheet opened successfully:", sheet.title)
+    print("✅ تم فتح الشيت بنجاح:", sheet.title)
 except Exception as e:
-    print("❌ Failed to open sheet:", str(e))
+    print("❌ فشل في فتح الشيت:", str(e))
     raise e
 
 # قائمة الموظفين
@@ -54,6 +54,16 @@ def is_existing_client(phone):
     return any(row['Phone'] == phone for row in records)
 
 
+def update_last_message(phone, message):
+    all_data = sheet.get_all_records()
+    for idx, row in enumerate(all_data, start=2):  # الصف 2 لأن الصف 1 يحتوي على العناوين
+        if row['Phone'] == phone:
+            sheet.update_cell(idx, 3, message)  # تحديث LastMessage
+            sheet.update_cell(idx, 4, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))  # تحديث الوقت
+            print("🔄 تم تحديث آخر رسالة للعميل")
+            break
+
+
 def save_client(phone, message):
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     assigned_to = assign_employee()
@@ -66,7 +76,7 @@ def send_welcome_message(phone):
     if "@c.us" in phone:
         phone = phone.replace("@c.us", "")
     if not phone.startswith("2"):
-        print("❌ رقم غير صالح للإرسال:", phone)
+        print("❌ الرقم غير صالح للإرسال:", phone)
         return
 
     url = f"https://api.ultramsg.com/{ULTRAMSG_INSTANCE}/messages/chat"
@@ -78,7 +88,7 @@ def send_welcome_message(phone):
     }
     try:
         response = requests.post(url, headers=headers, data=payload)
-        print("📤 رسالة ترحيب - تم الإرسال:", response.status_code, response.text)
+        print("📤 رسالة الترحيب - تم الإرسال:", response.status_code, response.text)
     except Exception as e:
         print("❌ فشل إرسال رسالة الترحيب:", e)
 
@@ -87,35 +97,36 @@ def send_welcome_message(phone):
 def webhook():
     try:
         data = request.get_json(force=True)
-        print("📥 Incoming request:", json.dumps(data, indent=2))
+        print("📥 تم استلام الطلب:", json.dumps(data, indent=2))
 
         if not data or 'data' not in data:
-            print("❌ Missing 'data' field in JSON.")
+            print("❌ البيانات المستلمة غير صالحة: الحقل 'data' مفقود")
             return "Invalid Data", 400
 
         message = data['data']
-        print("📦 Message:", message)
+        print("📦 محتوى الرسالة:", message)
 
         sender = message.get('from')
         msg_body = message.get('body', '')
         is_group = '@g.us' in sender if sender else False
         from_me = message.get('fromMe', False)
 
-        print(f"📞 Sender: {sender}, Body: {msg_body}, Group: {is_group}, FromMe: {from_me}")
+        print(f"📞 الرقم: {sender}, المحتوى: {msg_body}, من مجموعة: {is_group}, منّي: {from_me}")
 
         if is_group or from_me:
             return "Ignored", 200
 
         if is_existing_client(sender):
-            print("🔁 Already assigned")
+            update_last_message(sender, msg_body)
+            print("🔁 العميل موجود مسبقًا - تم تحديث الرسالة")
             return "Already assigned", 200
 
         assigned_to = save_client(sender, msg_body)
-        print(f"✅ Assigned to: {assigned_to}")
+        print(f"✅ تم تخصيص العميل إلى: {assigned_to}")
         return "Logged", 200
 
     except Exception as e:
-        print("💥 Error:", str(e))
+        print("💥 خطأ أثناء المعالجة:", str(e))
         return "Error", 500
 
 
