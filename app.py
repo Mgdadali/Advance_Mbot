@@ -1,11 +1,12 @@
 import os
-import json
+import json 
 from flask import Flask, request
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
+import requests
 
-app = Flask(__name__)
+app = Flask(__name__)  # ❗️كان في خطأ هنا: name بدل __name__
 
 # إعداد Google Sheet
 SHEET_ID = '10-gDKaxRQfJqkIoiF3BYQ0YiNXzG7Ml9Pm5r9X9xfCM'
@@ -22,17 +23,21 @@ client = gspread.authorize(credentials)
 
 # فتح Google Sheet واختبار الوصول
 try:
-    sheet = client.open_by_key(SHEET_ID).worksheet("sheet")  # تأكد من اسم الورقة
+    sheet = client.open_by_key(SHEET_ID).worksheet("sheet")
     print("✅ Sheet opened successfully:", sheet.title)
 except Exception as e:
     print("❌ Failed to open sheet:", str(e))
-    raise e  # حتى تتوقف الخدمة لو في مشكلة حقيقية
+    raise e
 
 # قائمة الموظفين
 EMPLOYEES = [
     "201029664170", "201029773000", "201029772000",
     "201055855040", "201029455000", "201027480870", "201055855030"
 ]
+
+ULTRAMSG_TOKEN = os.getenv('ULTRAMSG_TOKEN')
+ULTRAMSG_INSTANCE = os.getenv('ULTRAMSG_INSTANCE')
+
 
 def assign_employee():
     data = sheet.get_all_records()
@@ -43,15 +48,40 @@ def assign_employee():
             assigned_counts[emp] += 1
     return min(assigned_counts, key=assigned_counts.get)
 
+
 def is_existing_client(phone):
     records = sheet.get_all_records()
     return any(row['Phone'] == phone for row in records)
+
 
 def save_client(phone, message):
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     assigned_to = assign_employee()
     sheet.append_row([phone, assigned_to, message, now])
+    send_welcome_message(phone)
     return assigned_to
+
+
+def send_welcome_message(phone):
+    if "@c.us" in phone:
+        phone = phone.replace("@c.us", "")
+    if not phone.startswith("2"):
+        print("❌ رقم غير صالح للإرسال:", phone)
+        return
+
+    url = f"https://api.ultramsg.com/{ULTRAMSG_INSTANCE}/messages/chat"
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    payload = {
+        "token": ULTRAMSG_TOKEN,
+        "to": phone,
+        "body": "مرحبًا بك! تم استلام رسالتك وسنقوم بالرد عليك قريبًا."
+    }
+    try:
+        response = requests.post(url, headers=headers, data=payload)
+        print("📤 رسالة ترحيب - تم الإرسال:", response.status_code, response.text)
+    except Exception as e:
+        print("❌ فشل إرسال رسالة الترحيب:", e)
+
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -87,6 +117,7 @@ def webhook():
     except Exception as e:
         print("💥 Error:", str(e))
         return "Error", 500
+
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
